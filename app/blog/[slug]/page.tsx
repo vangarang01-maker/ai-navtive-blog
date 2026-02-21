@@ -1,7 +1,14 @@
 import { notFound } from 'next/navigation'
 import { CustomMDX } from 'app/components/mdx'
+import { AuthorProfile } from 'app/components/AuthorProfile'
 import { formatDate, getBlogPosts } from 'app/blog/utils'
 import { baseUrl } from 'app/sitemap'
+
+const author = {
+  name: 'My Name',
+  bio: '블로그 운영자입니다. 개발, 글쓰기, 그리고 새로운 것들을 탐구하는 것을 좋아합니다.',
+  avatarUrl: 'https://github.com/github.png',
+}
 
 export async function generateStaticParams() {
   let posts = getBlogPosts()
@@ -95,6 +102,7 @@ export default async function Blog({ params }) {
       <article className="prose">
         <CustomMDX source={post.content} />
       </article>
+      <AuthorProfile author={author} />
     </section>
   )
 }
