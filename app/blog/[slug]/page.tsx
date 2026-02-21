@@ -1,7 +1,14 @@
 import { notFound } from 'next/navigation'
 import { CustomMDX } from 'app/components/mdx'
+import { AuthorProfile } from 'app/components/AuthorProfile'
 import { formatDate, getBlogPosts } from 'app/blog/utils'
 import { baseUrl } from 'app/sitemap'
+
+const author = {
+  name: 'My Name',
+  bio: '블로그 운영자입니다. 개발, 글쓰기, 그리고 새로운 것들을 탐구하는 것을 좋아합니다.',
+  avatarUrl: 'https://github.com/github.png',
+}
 
 export async function generateStaticParams() {
   let posts = getBlogPosts()
@@ -11,8 +18,9 @@ export async function generateStaticParams() {
   }))
 }
 
-export function generateMetadata({ params }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug)
+export async function generateMetadata({ params }) {
+  let { slug } = await params
+  let post = getBlogPosts().find((post) => post.slug === slug)
   if (!post) {
     return
   }
@@ -51,8 +59,9 @@ export function generateMetadata({ params }) {
   }
 }
 
-export default function Blog({ params }) {
-  let post = getBlogPosts().find((post) => post.slug === params.slug)
+export default async function Blog({ params }) {
+  let { slug } = await params
+  let post = getBlogPosts().find((post) => post.slug === slug)
 
   if (!post) {
     notFound()
@@ -93,6 +102,7 @@ export default function Blog({ params }) {
       <article className="prose">
         <CustomMDX source={post.content} />
       </article>
+      <AuthorProfile author={author} />
     </section>
   )
 }
